@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bobo.biz.dao.CompanyMapper">
+  <insert id="insertBatch">
+   insert into biz_company (name,corporation,address,capital,regist_No,type,period,created) values 
+   <foreach collection="list" separator="," item="company">
+     (#{company.name},#{company.corporation},#{company.address}
+     ,#{company.capital},#{company.registNo},#{company.type.id},#{company.period},#{company.created})
+   </foreach>
+   
+  
+  </insert>
+
+</mapper>

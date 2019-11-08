@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bobo.biz.dao.TypeMapper">
+  <insert id="insertBatch">
+   insert into biz_type (name) values 
+   <foreach collection="list" separator="," item="name">
+     (#{name})
+   </foreach>
+   
+  
+  </insert>
+  
+  <select id="selects" resultType="type">
+  select * from biz_type
+  
+  </select>
+
+</mapper>
