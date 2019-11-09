@@ -17,9 +17,11 @@ import com.bobo.biz.domain.Company;
 import com.bobo.biz.domain.Type;
 import com.bobo.biz.service.CompanyService;
 import com.bobo.biz.service.TypeService;
+import com.bobo.biz.vo.CompanyVO;
 import com.bobo.common.utils.DateUtil;
 import com.bobo.common.utils.RandomUtil;
 import com.bobo.common.utils.StringUtil;
+import com.github.pagehelper.PageInfo;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:spring-beans.xml")
@@ -38,7 +40,7 @@ public class CompanyServiceImplTest {
 
 		ArrayList<Company> list = new ArrayList<Company>();
 
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; i < 10000; i++) {
 
 			Company c = new Company();
 			String[] co = { "有限公司", "股份有限公司", "集团有限公司" };
@@ -75,4 +77,16 @@ public class CompanyServiceImplTest {
 		companyService.insertBatch(list);
 	}
 
+
+	@Test
+	public void selectsTest() {
+		CompanyVO vo = new CompanyVO();
+		//vo.setP1(1);
+		//vo.setP2(2000000);
+		//vo.setCtype("有限公司");
+	String[] qt=	new String[] {"国有独资公司","股份有限公司","有限责任公司"};
+	vo.setQt(qt);
+		PageInfo<Company> info = companyService.selects(vo, 1, 100);
+		System.out.println(info);
+	}
 }

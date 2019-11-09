@@ -3,14 +3,71 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.bobo.biz.dao.CompanyMapper">
-  <insert id="insertBatch">
-   insert into biz_company (name,corporation,address,capital,regist_No,type,period,created) values 
-   <foreach collection="list" separator="," item="company">
-     (#{company.name},#{company.corporation},#{company.address}
-     ,#{company.capital},#{company.registNo},#{company.type.id},#{company.period},#{company.created})
-   </foreach>
-   
-  
-  </insert>
+
+	<resultMap type="company" id="companyResultMap">
+		<id column="id" property="id" />
+		<result column="name" property="name" />
+		<result column="corporation" property="corporation" />
+		<result column="address" property="address" />
+		<result column="capital" property="capital" />
+		<result column="regist_no" property="registNo" />
+		<result column="period" property="period" />
+		<result column="created" property="created" />
+		<!-- 多对一的关系 -->
+		<association property="type" javaType="type">
+			<id column="tid" property="id" />
+			<result column="tname" property="name" />
+		</association>
+
+	</resultMap>
+
+
+	<select id="selects" resultMap="companyResultMap">
+		SELECT c.*,t.name as tname,t.id as tid from biz_company c LEFT JOIN biz_type t on c.type =t.id
+		<where>
+			<!-- 按照注册资金规模 -->
+			<if test="p1!=null and p2!=null">
+				c.capital between #{p1} and #{p2}
+			</if>
+			<!-- 按照公司类型 -->
+
+			<choose>
+				<!-- 如果企业类不等于其他,正常的模糊查询 -->
+				<when test="ctype!=null and ctype!=''">
+					t.name like "%"#{ctype}"%"
+				</when>
+				<!-- 否则,其他 -->
+				<when test="qt!=null and qt.length>0">
+					t.name not in
+					<foreach collection="qt" item="qtname" open="("
+						separator="," close=")">
+
+						#{qtname}
+
+					</foreach>
+
+				</when>
+
+
+			</choose>
+
+
+
+		</where>
+	</select>
+
+
+
+	<insert id="insertBatch">
+		insert into biz_company
+		(name,corporation,address,capital,regist_No,type,period,created)
+		values
+		<foreach collection="list" separator="," item="company">
+			(#{company.name},#{company.corporation},#{company.address}
+			,#{company.capital},#{company.registNo},#{company.type.id},#{company.period},#{company.created})
+		</foreach>
+
+
+	</insert>
 
 </mapper>
